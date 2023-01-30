@@ -18,13 +18,16 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         firebaseAnalytics.logEvent("MainActivityStarted", bundleOf("time" to System.currentTimeMillis()))
 
+        //Get the Remote Config singleton object
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 60
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
+        //Set in-app default parameter values
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
 
+        //Fetch and activate values
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
